@@ -2,17 +2,22 @@ package com.example.applistadetarefastlrf
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.applistadetarefastlrf.database.TarefaDAO
 import com.example.applistadetarefastlrf.databinding.ActivityMainBinding
+import com.example.applistadetarefastlrf.model.Tarefa
 
 class MainActivity : AppCompatActivity() {
 
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
+
+    var listaDeTarefas = emptyList<Tarefa>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +33,18 @@ class MainActivity : AppCompatActivity() {
         binding.fabAdicionar.setOnClickListener {
             val intent = Intent(this, AdicionarTarefaActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val tarefaDAO = TarefaDAO(this)
+
+        listaDeTarefas = tarefaDAO.listar()
+
+        listaDeTarefas.forEach{ tarefa ->
+            Log.i("info_db", "${tarefa.descricao}\n")
         }
     }
 }
