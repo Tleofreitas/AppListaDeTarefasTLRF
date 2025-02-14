@@ -7,6 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.applistadetarefastlrf.adapter.TarefaAdapter
 import com.example.applistadetarefastlrf.database.TarefaDAO
 import com.example.applistadetarefastlrf.databinding.ActivityMainBinding
 import com.example.applistadetarefastlrf.model.Tarefa
@@ -18,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     var listaDeTarefas = emptyList<Tarefa>()
+    private var tarefaAdapter: TarefaAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,17 +37,22 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, AdicionarTarefaActivity::class.java)
             startActivity(intent)
         }
+
+        // Recyclerview
+        tarefaAdapter = TarefaAdapter()
+        binding.rvTarefas.adapter = tarefaAdapter
+
+        binding.rvTarefas.layoutManager = LinearLayoutManager(this)
+    }
+
+    private fun atualizarListaDeTarefas(){
+        val tarefaDAO = TarefaDAO(this)
+        listaDeTarefas = tarefaDAO.listar()
+        tarefaAdapter?.adicionarLista(listaDeTarefas)
     }
 
     override fun onStart() {
         super.onStart()
-
-        val tarefaDAO = TarefaDAO(this)
-
-        listaDeTarefas = tarefaDAO.listar()
-
-        listaDeTarefas.forEach{ tarefa ->
-            Log.i("info_db", "${tarefa.descricao}\n")
-        }
+        atualizarListaDeTarefas()
     }
 }
