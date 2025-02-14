@@ -32,7 +32,18 @@ class TarefaDAO(context: Context) : ITarefaDao {
     }
 
     override fun deletar(id: Int): Boolean {
-        TODO("Not yet implemented")
+        val args = arrayOf(id.toString())
+        try {
+            escrita.delete(
+                DatabaseHelper.TABELA_TAREFAS, "${DatabaseHelper.ID_TAREFA} = ?",
+                args
+            )
+            Log.i("info_db", "Sucesso ao remover tarefa")
+        } catch (e: Exception){
+            Log.i("info_db", "erro ao remover tarefa")
+            return false
+        }
+        return true
     }
 
     override fun listar(): List<Tarefa> {
