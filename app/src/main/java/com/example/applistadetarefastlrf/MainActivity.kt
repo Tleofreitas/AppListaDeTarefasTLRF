@@ -2,7 +2,6 @@ package com.example.applistadetarefastlrf
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
@@ -42,11 +41,18 @@ class MainActivity : AppCompatActivity() {
 
         // Recyclerview
         tarefaAdapter = TarefaAdapter(
-            { id -> confirmarExclusao(id) }
+            { id -> confirmarExclusao(id) },
+            {tarefa -> editar(tarefa) }
         )
         binding.rvTarefas.adapter = tarefaAdapter
 
         binding.rvTarefas.layoutManager = LinearLayoutManager(this)
+    }
+
+    private fun editar(tarefa: Tarefa) {
+        val intent = Intent(this, AdicionarTarefaActivity::class.java)
+        intent.putExtra("tarefa", tarefa)
+        startActivity(intent)
     }
 
     private fun confirmarExclusao(id: Int) {
